@@ -66,7 +66,7 @@ def send_question_to_openai(question, docs_chunks):
     prompt_text = system_prompt + "\n\n" + "\n\n".join([chunk["content"] for chunk in relevant_chunks]) + "\n\nQuestion: " + question
 
     # Llama a la API de OpenAI con el prompt reducido
-    response = openai.ChatCompletion.create(
+    response = openai.Completion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": system_prompt},
