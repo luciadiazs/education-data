@@ -59,22 +59,26 @@ def find_relevant_chunks(question, docs_chunks, max_chunks=5):
     return relevant_chunks[:max_chunks]
 
 def send_question_to_openai(question, docs_chunks):
-    # Encuentra los chunks más relevantes para la pregunta
+    # Find the most relevant chunks for the question
     relevant_chunks = find_relevant_chunks(question, docs_chunks)
     
-    # Construye el prompt completo con el system_prompt y los chunks de texto relevantes
+    # Build the full prompt with the system prompt and the relevant chunks of text
     prompt_text = system_prompt + "\n\n" + "\n\n".join([chunk["content"] for chunk in relevant_chunks]) + "\n\nQuestion: " + question
 
-    # Llama a la API de OpenAI con el prompt reducido
+    # Call the OpenAI API with the complete prompt
     response = openai.Completion.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": question}
-        ]
+        prompt=prompt_text,
+        temperature=0.7,  # Adjust as necessary
+        max_tokens=150,   # Adjust as necessary
+        top_p=1.0,
+        frequency_penalty=0.0,
+        presence_penalty=0.0
     )
     
+    # Return the text of the first choice (strip any leading/trailing whitespace)
     return response.choices[0].text.strip()
+
 
 if st.button("Send"):
     if prompt:
