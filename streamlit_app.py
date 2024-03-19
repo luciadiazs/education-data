@@ -1,5 +1,3 @@
-pip install os json streamlit openai dotenv
-
 import os
 import json
 import streamlit as st
