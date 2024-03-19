@@ -74,7 +74,7 @@ def send_question_to_openai(question, docs_chunks):
         ]
     )
     
-    return response.choices[0].message['content']
+    return response.choices[0].text.strip()
 
 if st.button("Send"):
     if prompt:
