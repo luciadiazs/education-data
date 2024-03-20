@@ -71,7 +71,7 @@ def send_question_to_openai(question, docs_chunks):
     prompt_text = system_prompt + "\n\n" + "\n\n".join([chunk["content"] for chunk in relevant_chunks]) + "\n\nQuestion: " + question
 
     # Llama a la API de OpenAI con el prompt para chat
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": system_prompt},
@@ -79,7 +79,7 @@ def send_question_to_openai(question, docs_chunks):
         ]
     )
     
-    return response['choices'][0]['message']['content']
+    return completion.choices[0].message.content
 
 if st.button("Send"):
     if prompt:
