@@ -11,7 +11,7 @@ client = OpenAI(
 )
 
 # Configuración de Streamlit
-st.set_page_config(page_title="Interactive Education Database", layout="centered")
+st.set_page_config(page_title="Interactive Education Database📒📚", layout="centered")
 
 with st.sidebar:
     st.title('Interactive Education Database')
