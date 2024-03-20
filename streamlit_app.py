@@ -40,6 +40,24 @@ def main():
     # Instantiate the OpenAI client
     client = OpenAI(api_key=st.secrets["openai_key"])
 
+    def find_relevant_chunks(question, docs_chunks, max_chunks=5):
+    # Tokeniza la pregunta para extraer palabras clave significativas
+    question_keywords = set(re.findall(r'\w+', question.lower()))
+    relevance_scores = []
+
+    # Calcula un puntaje de relevancia para cada chunk (puede ser el conteo de palabras clave coincidentes)
+    for chunk in docs_chunks:
+        chunk_text = chunk["content"].lower()
+        chunk_keywords = set(re.findall(r'\w+', chunk_text))
+        common_keywords = question_keywords.intersection(chunk_keywords)
+        relevance_scores.append((len(common_keywords), chunk))
+
+    # Ordena los chunks por su puntaje de relevancia, de mayor a menor
+    relevant_chunks = [chunk for _, chunk in sorted(relevance_scores, key=lambda x: x[0], reverse=True)]
+
+    # Retorna los top N chunks más relevantes
+    return relevant_chunks[:max_chunks]
+
     def send_question_to_openai(question, docs_chunks):
         # Find the most relevant chunks for the question
         relevant_chunks = find_relevant_chunks(question, docs_chunks)
