@@ -80,7 +80,7 @@ def send_question_to_openai(question, docs_chunks):
     )
     
     # Return the message content directly
-    return response.choices[0].message['content']
+    return response.choices[0].message.content
 
 if st.button("Send"):
     if prompt:  # Check if the prompt is not empty
