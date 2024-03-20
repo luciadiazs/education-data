@@ -5,6 +5,10 @@ import openai
 from dotenv import load_dotenv
 import re  # Importante para las expresiones regulares en find_relevant_chunks
 
+client = OpenAI(
+  api_key=os.environ['openai_key'],  # this is also the default, it can be omitted
+)
+
 # Configuración de Streamlit
 st.set_page_config(page_title="Interactive Education Database", layout="centered")
 
@@ -38,7 +42,7 @@ if "messages" not in st.session_state:
 prompt = st.text_input("Your inquiry:", "")
 
 
-openai.api_key = st.secrets["openai_key"]
+openai.api_key = st.secrets['openai_key']
 
 def find_relevant_chunks(question, docs_chunks, max_chunks=5):
     # Tokeniza la pregunta para extraer palabras clave significativas
@@ -65,7 +69,7 @@ def send_question_to_openai(question, docs_chunks):
     # Construye el prompt completo con el system_prompt y los chunks de texto relevantes
     prompt_text = system_prompt + "\n\n" + "\n\n".join([chunk["content"] for chunk in relevant_chunks]) + "\n\nQuestion: " + question
 
-    # Llama a la API de OpenAI con el prompt reducido
+    # Llama a la API de OpenAI con el prompt para chat
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -74,7 +78,7 @@ def send_question_to_openai(question, docs_chunks):
         ]
     )
     
-    return response.choices[0].message['content']
+    return response['choices'][0]['message']['content']
 
 if st.button("Send"):
     if prompt:
