@@ -2,7 +2,6 @@ import os
 import json
 import streamlit as st
 from openai import OpenAI
-from openai.error import OpenAIError
 from dotenv import load_dotenv
 import re  # Important for regex in find_relevant_chunks
 
@@ -63,13 +62,14 @@ def send_question_to_openai(question, docs_chunks):
             model="gpt-3.5-turbo",
             messages=[{"role": "system", "content": prompt_text}, {"role": "user", "content": question}]
         )
-    except OpenAIError as e:
-        print(f"An error occurred: {e}")
+    except Exception as e:  # Using a generic exception handler here
+        print(f"An error occurred: {str(e)}")
         return "Sorry, I couldn't process your request."
 
     # Assuming the response structure aligns with the chat model
-    # You may need to adjust this part based on the actual response structure
-    if response and 'choices' in response and len(response['choices']) > 0 and 'message' in response['choices'][0]:
+    # Adjust this part based on the actual response structure
+    if response and 'choices' in response and len(response['choices']) > 0:
+        # The exact key to use here may vary depending on the response structure
         return response['choices'][0]['message']['content'].strip()
     else:
         return "Sorry, I couldn't generate a response. Please try again."
