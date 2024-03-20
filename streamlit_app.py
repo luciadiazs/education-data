@@ -2,6 +2,7 @@ import os
 import json
 import streamlit as st
 from openai import OpenAI
+from openai.error import OpenAIError
 from dotenv import load_dotenv
 import re  # Important for regex in find_relevant_chunks
 
@@ -56,19 +57,22 @@ def send_question_to_openai(question, docs_chunks):
     # Build the full prompt with the system prompt and the relevant chunks of text
     prompt_text = system_prompt + "\n\n" + "\n\n".join([chunk["content"] for chunk in relevant_chunks]) + "\n\nQuestion: " + question
 
-    # Call the OpenAI API with the complete prompt using the client
-    response = client.completions.create(
-        model="gpt-3.5-turbo",
-        prompt=prompt_text,
-        temperature=0.7,  # Adjust as necessary
-        max_tokens=150,   # Adjust as necessary
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0
-    )
-    
-    # Return the text of the first choice (strip any leading/trailing whitespace)
-    return response.choices[0].text.strip()
+    try:
+        # Adjusted to use the chat completion method
+        response = client.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": prompt_text}, {"role": "user", "content": question}]
+        )
+    except OpenAIError as e:
+        print(f"An error occurred: {e}")
+        return "Sorry, I couldn't process your request."
+
+    # Assuming the response structure aligns with the chat model
+    # You may need to adjust this part based on the actual response structure
+    if response and 'choices' in response and len(response['choices']) > 0 and 'message' in response['choices'][0]:
+        return response['choices'][0]['message']['content'].strip()
+    else:
+        return "Sorry, I couldn't generate a response. Please try again."
 
 # Main interaction logic needs to be in the global scope for Streamlit to execute it correctly
 if "messages" not in st.session_state:
