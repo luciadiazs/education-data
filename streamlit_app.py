@@ -4,6 +4,7 @@ import streamlit as st
 import openai
 from dotenv import load_dotenv
 import re  # Importante para las expresiones regulares en find_relevant_chunks
+from openai import OpenAI
 
 client = OpenAI(
   api_key=os.environ['openai_key'],  # this is also the default, it can be omitted
