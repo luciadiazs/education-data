@@ -79,8 +79,8 @@ def send_question_to_openai(question, docs_chunks):
         ]
     )
     
-    # Assuming direct attribute access works
-    print(response.choices[0].message.content)
+    # Return the message content directly
+    return response.choices[0].message['content']
 
 if st.button("Send"):
     if prompt:
