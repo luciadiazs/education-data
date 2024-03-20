@@ -77,7 +77,7 @@ def send_question_to_openai(question, docs_chunks):
         )
         
         # Return the text of the first choice (strip any leading/trailing whitespace)
-        return response.choices[0].text.strip()
+    return response.choices[0].text.strip()
 
 if st.button("Send"):
     if prompt:
