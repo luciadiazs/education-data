@@ -83,20 +83,25 @@ def send_question_to_openai(question, docs_chunks):
     return response.choices[0].message['content']
 
 if st.button("Send"):
-    if prompt:
+    if prompt:  # Check if the prompt is not empty
         user_message = {"role": "user", "content": prompt}
         st.session_state.messages.append(user_message)
 
         with st.spinner("Generating answer..."):
             response_text = send_question_to_openai(prompt, docs_chunks)
-            assistant_message = {"role": "assistant", "content": response_text}
-            st.session_state.messages.append(assistant_message)
+            if response_text:  # Check if the response_text is not None or empty
+                assistant_message = {"role": "assistant", "content": response_text}
+                st.session_state.messages.append(assistant_message)
+            else:
+                st.error("Failed to get a response.")  # Display an error if no response was received
 
+# Display the messages
 for index, message in enumerate(st.session_state.messages):
     if message["role"] == "user":
         st.text_area("Question", value=message["content"], height=75, disabled=True, key=f"user_{index}")
-    else:  # message["role"] == "assistant"
+    elif message["role"] == "assistant":  # Ensure this is an 'elif' to check specifically for "assistant" role
         st.text_area("Answer", value=message["content"], height=100, disabled=True, key=f"assistant_{index}")
+
 
 if __name__ == "__main__":
     main()
