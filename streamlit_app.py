@@ -17,7 +17,7 @@ with st.sidebar:
     st.title('Interactive Education Database')
     st.markdown('''
     ## About this bot
-    This is a chatbot that allows you to talk to the PDFs used for the  Education, English Learning and Youth in Perú.
+    This is a chatbot that allows you to talk to the PDFs used for the  Education, English Learning and Youth in Perú report.
     Here are the PDFs loaded in this database: https://drive.google.com/drive/folders/15HUOFZtQpWB9DGZNZuSL4ej7Mr3nC3Ks?usp=sharing
                 ''')
 
